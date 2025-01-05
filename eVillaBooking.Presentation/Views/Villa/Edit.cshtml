@@ -1,12 +1,13 @@
 ﻿@model eVillaBooking.Domain.Entities.Villa
 <div class="row">
 	<div class="w-100 card">
-		<div class="text-danger" asp-validation-summary="ModelOnly"></div>
 		<div class="card-header bg-success bg-gradient text-center border m-3">
-			<div>Create New Villa List</div>
+			<div>Edit Villa List</div>
 		</div>
 		<div class="card-body">
-			<form asp-controller="Villa" asp-action="Create" method="post">
+			<form asp-controller="Villa" asp-action="Edit" method="post">
+				<input type="hidden" asp-for="Id" />
+
 				<div class="py-1">
 					<div class="form-floating">
 						<input type="text" asp-for="Name" class="form-control" placeholder="" />
@@ -14,7 +15,7 @@
 						<span asp-validation-for="Name" class="text-danger"></span>
 					</div>
 				</div>
-				
+
 				<div class="py-1">
 					<div class="form-floating">
 						<input type="text" asp-for="Description" class="form-control" placeholder="" />
@@ -54,21 +55,15 @@
 						<span asp-validation-for="ImageUrl" class="text-danger"></span>
 					</div>
 				</div>
-				
+
 				<div class="py-2 text-center">
 					<input type="submit" value="Save" class="btn btn-success" />
 					<a asp-controller="Villa" asp-action="Index" class="btn btn-warning">Cancal</a>
 				</div>
 
 			</form>
-			
+
 		</div>
 	</div>
 
 </div>
-
-@section Scripts{
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	}
-}
