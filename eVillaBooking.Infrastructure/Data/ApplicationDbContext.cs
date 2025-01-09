@@ -11,6 +11,7 @@ namespace eVillaBooking.Infrastructure.Data
         }
 
         public DbSet<Villa> Villas { get; set; }
+        public DbSet<VillaNumber> VillaNumbers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -48,6 +49,24 @@ namespace eVillaBooking.Infrastructure.Data
                                   };
             modelBuilder.Entity<Villa>().HasData(seedData);
 
+            modelBuilder.Entity<VillaNumber>().HasData(
+                new VillaNumber()
+                {
+                    Villa_Id = 1,
+                    Villa_Number = 101,
+                },
+                new VillaNumber()
+                {
+                    Villa_Id = 2,
+                    Villa_Number = 201,
+                },
+                new VillaNumber()
+                {
+                    Villa_Id = 3,
+                    Villa_Number = 301,
+                });
+
+                 
 
 
             //base.OnModelCreating(modelBuilder);

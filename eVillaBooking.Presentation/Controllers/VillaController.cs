@@ -33,6 +33,7 @@ namespace eVillaBooking.Presentation.Controllers
             {
                 _db.Villas.Add(villa);
                 _db.SaveChanges();
+                TempData["SuccessMessage"] = "Villa has been added successfully";
                 return RedirectToAction(nameof(Index));
             }
             return View(villa);
@@ -55,6 +56,7 @@ namespace eVillaBooking.Presentation.Controllers
             {
                 _db.Villas.Update(villa);
                 _db.SaveChanges();
+                TempData["SuccessMessage"] = "Villa has been updated successfully";
                 return RedirectToAction(nameof(Index));
             }
             return View(villa);
@@ -76,6 +78,7 @@ namespace eVillaBooking.Presentation.Controllers
             var villa = _db.Villas.Find(id);
             _db.Villas.Remove(villa);
             _db.SaveChanges();
+            TempData["SuccessMessage"] = "Villa has been deleted successfully";
             return RedirectToAction(nameof(Index));
         }
     }
