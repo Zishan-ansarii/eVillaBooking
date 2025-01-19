@@ -87,17 +87,25 @@ namespace eVillaBooking.Presentation.Controllers
 
         public IActionResult Delete(int id)
         {
-            var villaNumber = _db.VillaNumbers.Find(id);
+            var villaNumber = _db.VillaNumbers.FirstOrDefault(vn => vn.Villa_Number==id);
             if (villaNumber is null)
             {
                 return NotFound();
             }
+            var selectListItem = _db.Villas.Select(v => new SelectListItem
+            {
+                Text = v.Name,
+                Value = v.Id.ToString()
+            }).ToList();
+            ViewData["SelectListItem"] = selectListItem;
+
             return View(villaNumber);
         }
 
-        public IActionResult DeleteConfirm(int id)
+        public IActionResult DeleteConfirm(IFormCollection formValues, int id)
         {
-            var villaNumber = _db.VillaNumbers.Find(id);
+            var test =Convert.ToInt16( formValues["Villa_Number"]);
+            var villaNumber = _db.VillaNumbers.FirstOrDefault(vn => vn.Villa_Number==test);
             _db.VillaNumbers.Remove(villaNumber);
             _db.SaveChanges();
             TempData["SuccessMessage"] = "Villa Number has been deleted Successfully";
