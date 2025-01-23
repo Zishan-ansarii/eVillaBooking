@@ -1,4 +1,5 @@
-﻿using eVillaBooking.Domain.Entities;
+﻿using eVillaBooking.Application.Common.Interfaces;
+using eVillaBooking.Domain.Entities;
 using eVillaBooking.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -8,21 +9,23 @@ namespace eVillaBooking.Presentation.Controllers
 {
     public class VillaNumberController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        public VillaNumberController(ApplicationDbContext db)
+        private readonly IVillaNumberRepository _villaNumberRepository;
+        private readonly IVillaRepository _villaRepository;
+        public VillaNumberController(IVillaNumberRepository villaNumberRepository, IVillaRepository villaRepository)
         {
-            _db = db;
+            _villaNumberRepository = villaNumberRepository;
+            _villaRepository = villaRepository;
         }
         public IActionResult Index()
         {
-            //var villaNumber = _db.VillaNumbers.ToList();
-            var villaNumber = _db.VillaNumbers.Include("Villa").ToList();
+            var villaNumber = _villaNumberRepository.GetAll(includeProperties: "Villa");
             return View(villaNumber);
         }
 
         public IActionResult Create()
         {
-            List<Villa> villas = _db.Villas.ToList();
+            IEnumerable<Villa> villas = _villaRepository.GetAll();
+
             IEnumerable<SelectListItem> selectListItems = villas.Select(v => new SelectListItem
             {
                 Text = v.Name,
@@ -35,38 +38,44 @@ namespace eVillaBooking.Presentation.Controllers
         [HttpPost]
         public IActionResult Create(VillaNumber villaNumber)
         {
-            bool isVillaNumberExist = _db.VillaNumbers.Any(vn => vn.Villa_Number == villaNumber.Villa_Number);
+            //bool isVillaNumberExist = _villaNumberRepository.GetAll().Any(vn => vn.Villa_Number == villaNumber.Villa_Number);
+
+            bool isVillaNumberExist = _villaNumberRepository.GetAll(vn => vn.Villa_Number == villaNumber.Villa_Number).Any();
+
             if (ModelState.IsValid && !isVillaNumberExist)
             {
-                _db.VillaNumbers.Add(villaNumber);
-                _db.SaveChanges();
+                _villaNumberRepository.Add(villaNumber);
+                _villaNumberRepository.Save();
+
                 TempData["SuccessMessage"] = "Villa Number has been added successfully";
                 return RedirectToAction(nameof(Index));
             }
 
-            var selectListItem = _db.Villas.Select(v => new SelectListItem
+            var selectListItem = _villaRepository.GetAll().Select(v => new SelectListItem
             {
                 Text = v.Name,
                 Value = v.Id.ToString()
             }).ToList();
 
-            ViewData["SelectListItem"] = selectListItem;
+            ViewBag.SelectListItem = selectListItem;
             TempData["ErrorMessage"] = "Villa number already exists";
             return View(villaNumber);
         }
 
         public IActionResult Edit(int id)
         {
-            var villaNumber = _db.VillaNumbers.Find(id);
+            //var villaNumber = _db.VillaNumbers.Find(id);
+            var villaNumber = _villaNumberRepository.GetAll(vn => vn.Villa_Number == id).FirstOrDefault();
             if (villaNumber is null)
             {
                 return RedirectToAction("Error", "Home");
             }
-            var selectListItem = _db.Villas.Select(v => new SelectListItem
+            var selectListItem =_villaRepository.GetAll().Select(v => new SelectListItem
             {
                 Text = v.Name,
                 Value = v.Id.ToString()
             }).ToList();
+
             ViewData["SelectListItem"] = selectListItem;
             return View(villaNumber);
         }
@@ -77,8 +86,9 @@ namespace eVillaBooking.Presentation.Controllers
             if (ModelState.IsValid)
             {
                
-                _db.VillaNumbers.Update(villaNumber);
-                _db.SaveChanges();
+                _villaNumberRepository.Update(villaNumber);
+                _villaNumberRepository.Save();
+
                 TempData["SuccessMessage"] = "Villa Number has been updated successfully";
                 return RedirectToAction(nameof(Index));
             }
@@ -87,27 +97,29 @@ namespace eVillaBooking.Presentation.Controllers
 
         public IActionResult Delete(int id)
         {
-            var villaNumber = _db.VillaNumbers.FirstOrDefault(vn => vn.Villa_Number==id);
+            //var villaNumber = _db.VillaNumbers.FirstOrDefault(vn => vn.Villa_Number==id);
+            var villaNumber = _villaNumberRepository.GetAll(vn => vn.Villa_Number == id).FirstOrDefault();
             if (villaNumber is null)
             {
                 return NotFound();
             }
-            var selectListItem = _db.Villas.Select(v => new SelectListItem
+            var selectListItem = _villaRepository.GetAll().Select(v => new SelectListItem
             {
                 Text = v.Name,
                 Value = v.Id.ToString()
             }).ToList();
+
             ViewData["SelectListItem"] = selectListItem;
 
             return View(villaNumber);
         }
 
-        public IActionResult DeleteConfirm(IFormCollection formValues, int id)
+        public IActionResult DeleteConfirm(int id)
         {
-            var test =Convert.ToInt16( formValues["Villa_Number"]);
-            var villaNumber = _db.VillaNumbers.FirstOrDefault(vn => vn.Villa_Number==test);
-            _db.VillaNumbers.Remove(villaNumber);
-            _db.SaveChanges();
+            var villaNumber = _villaNumberRepository.Get(vn => vn.Villa_Number == id);
+            _villaNumberRepository.Remove(villaNumber);
+           _villaNumberRepository.Save();
+
             TempData["SuccessMessage"] = "Villa Number has been deleted Successfully";
             return RedirectToAction(nameof(Index));
         }
