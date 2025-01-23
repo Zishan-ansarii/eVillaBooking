@@ -30,9 +30,9 @@ namespace eVillaBooking.Presentation.Controllers
             {
                 ModelState.AddModelError("Name", "Name and Description are same");
             }
-
             if (ModelState.IsValid)
             {
+                //_db.Villas.Add(villa);
                 _villaRepository.Add(villa);
                 _villaRepository.save();
 
@@ -44,8 +44,8 @@ namespace eVillaBooking.Presentation.Controllers
 
         public IActionResult Edit(int id)
         {
+            //var villa = _db.Villas.Find(id);
             var villa = _villaRepository.Get(v => v.Id == id);
-
             if (villa == null)
             {
                 return RedirectToAction("Error","Home");
@@ -60,7 +60,6 @@ namespace eVillaBooking.Presentation.Controllers
             {
                 _villaRepository.Update(villa);
                 _villaRepository.save();
-
                 TempData["SuccessMessage"] = "Villa has been updated successfully";
                 return RedirectToAction(nameof(Index));
             }
@@ -70,7 +69,6 @@ namespace eVillaBooking.Presentation.Controllers
         public IActionResult Delete(int id)
         {
             var villa = _villaRepository.Get(v => v.Id==id);
-
             if (villa is null)
             {
                 return NotFound();

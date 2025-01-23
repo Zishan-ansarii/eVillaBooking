@@ -10,10 +10,10 @@
 				<input type="hidden" asp-for="Villa_Number"/>
 				<div class="py-1">
 					<div class="form-floating">
-						<select disabled class="form-select" asp-for="Villa_Id" asp-items="@(ViewData["SelectListItem"] as IEnumerable<SelectListItem>)">
-							<option selected>Select Villa Name</option>
+						<select class="form-select" asp-for="Villa_Id" asp-items="@(ViewData["SelectListItem"] as IEnumerable<SelectListItem>)">
+							<option disabled selected>Select Villa Name</option>
 						</select>
-						<label  asp-for="Villa_Id">Villa ID</label>
+						<label asp-for="Villa_Id">Villa ID</label>
 						<span asp-validation-for="Villa_Id" class="text-danger"></span>
 
 					</div>
@@ -21,7 +21,7 @@
 
 				<div class="py-1">
 					<div class="form-floating">
-						<input  type="text" asp-for="Villa_Number" class="form-control" placeholder="" />
+						<input disabled type="text" asp-for="Villa_Number" class="form-control" placeholder="" />
 						<label asp-for="Villa_Number">Villa Number</label>
 						<span asp-validation-for="Villa_Number" class="text-danger"></span>
 					</div>
@@ -29,7 +29,7 @@
 
 				<div class="py-1">
 					<div class="form-floating">
-						<input  type="text" asp-for="SpecialDetails" class="form-control" placeholder="" />
+						<input type="text" asp-for="SpecialDetails" class="form-control" placeholder="" />
 						<label asp-for="SpecialDetails">Special Details</label>
 						<span asp-validation-for="SpecialDetails" class="text-danger"></span>
 					</div>
