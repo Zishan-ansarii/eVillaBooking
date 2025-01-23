@@ -9,7 +9,7 @@
 			<form asp-controller="VillaNumber" asp-action="Create" method="post">
 				<div class="py-1">
 					<div class="form-floating">
-						<select class="form-select" asp-for="Villa_Id" asp-items="@(ViewData["SelectListItem"] as IEnumerable<SelectListItem>)">
+						<select class="form-select" asp-for="Villa_Id" asp-items="@(ViewBag.SelectListItem)">
 							<option disabled selected>Select Villa Name</option>
 						</select>
 						<label asp-for="Villa_Id">Villa ID</label>

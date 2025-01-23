@@ -7,7 +7,7 @@
 		</div>
 		<div class="card-body">
 			<form asp-controller="VillaNumber" asp-action="DeleteConfirm" method="post">
-				<input type="hidden"  asp-for="Villa_Number" />
+				<input type="hidden" name="id" asp-for="Villa_Number" />
 				<div class="py-1">
 					<div class="form-floating">
 						<select disabled class="form-select" asp-for="Villa_Id" asp-items="@(ViewData["SelectListItem"] as IEnumerable<SelectListItem>)">
