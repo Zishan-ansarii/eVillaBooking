@@ -1,27 +1,30 @@
 ﻿@model VillaNumber
+
 <div class="row">
 	<div class="w-100 card">
+
 		<div class="text-danger" asp-validation-summary="ModelOnly"></div>
 		<div class="card-header bg-success bg-gradient text-center border m-3">
 			<div>Edit New Villa Number</div>
 		</div>
+
 		<div class="card-body">
 			<form asp-controller="VillaNumber" asp-action="Edit" method="post">
-				<input type="hidden" asp-for="Villa_Number"/>
+				<input type="hidden" asp-for="Villa_Number" />
+
 				<div class="py-1">
 					<div class="form-floating">
-						<select disabled class="form-select" asp-for="Villa_Id" asp-items="@(ViewData["SelectListItem"] as IEnumerable<SelectListItem>)">
+						<select  class="form-select" asp-for="Villa_Id" asp-items="@(ViewData["SelectListItem"] as IEnumerable<SelectListItem>)">
 							<option selected>Select Villa Name</option>
 						</select>
 						<label  asp-for="Villa_Id">Villa ID</label>
 						<span asp-validation-for="Villa_Id" class="text-danger"></span>
-
 					</div>
 				</div>
 
 				<div class="py-1">
 					<div class="form-floating">
-						<input  type="text" asp-for="Villa_Number" class="form-control" placeholder="" />
+						<input disabled type="text" asp-for="Villa_Number" class="form-control" placeholder="" />
 						<label asp-for="Villa_Number">Villa Number</label>
 						<span asp-validation-for="Villa_Number" class="text-danger"></span>
 					</div>
