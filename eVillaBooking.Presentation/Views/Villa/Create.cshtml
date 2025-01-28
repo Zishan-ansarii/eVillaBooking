@@ -6,7 +6,7 @@
 			<div>Create New Villa List</div>
 		</div>
 		<div class="card-body">
-			<form asp-controller="Villa" asp-action="Create" method="post">
+			<form asp-controller="Villa" asp-action="Create" method="post" enctype="multipart/form-data">
 				<div class="py-1">
 					<div class="form-floating">
 						<input type="text" asp-for="Name" class="form-control" placeholder="" />
@@ -49,7 +49,8 @@
 
 				<div class="py-1">
 					<div class="form-floating">
-						<input type="text" asp-for="ImageUrl" class="form-control" placeholder="" />
+						<input hidden type="text" asp-for="ImageUrl" class="form-control" placeholder="" />
+						<input asp-for="Image" class="form-control" placeholder="" />
 						<label asp-for="ImageUrl"></label>
 						<span asp-validation-for="ImageUrl" class="text-danger"></span>
 					</div>
