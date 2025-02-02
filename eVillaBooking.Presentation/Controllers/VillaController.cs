@@ -8,9 +8,12 @@ namespace eVillaBooking.Presentation.Controllers
     public class VillaController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        public VillaController(IUnitOfWork unitOfWork)
+
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public VillaController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _webHostEnvironment = webHostEnvironment;
         }
         public IActionResult Index()
 
@@ -33,6 +36,25 @@ namespace eVillaBooking.Presentation.Controllers
 
             if (ModelState.IsValid)
             {
+                if(villa.Image != null)
+                {
+                    string webRootPath = _webHostEnvironment.WebRootPath;
+                    string imagePath = Path.Combine(webRootPath, @"Images\VillaImages");
+                    string myFileName = villa.Image.FileName.Split('.')[0] +"_"+ Guid.NewGuid().ToString().Substring(0,5) + Path.GetExtension(villa.Image.FileName);
+
+                    string finalPath = Path.Combine(imagePath, myFileName);
+                    using (FileStream filestream = new FileStream(finalPath,FileMode.Create))
+                    {
+                        villa.Image.CopyTo(filestream);
+                        villa.ImageUrl = @"\Images\VillaImages\" + myFileName;
+                    }
+                }
+                else
+                {
+                    villa.ImageUrl = "www.dummy.com";
+                }
+
+
                 _unitOfWork.VillaRepositoryUOW.Add(villa);
                 _unitOfWork.Save();
 
