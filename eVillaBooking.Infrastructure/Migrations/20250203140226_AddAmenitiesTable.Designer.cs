@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eVillaBooking.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using eVillaBooking.Infrastructure.Data;
 namespace eVillaBooking.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250203140226_AddAmenitiesTable")]
+    partial class AddAmenitiesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,80 +48,6 @@ namespace eVillaBooking.Infrastructure.Migrations
                     b.HasIndex("VillaId");
 
                     b.ToTable("Amenities");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Swimming Pool",
-                            VillaId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Gym",
-                            VillaId = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Spa",
-                            VillaId = 1
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Wi-Fi",
-                            VillaId = 1
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Private Beach",
-                            VillaId = 2
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Yoga Room",
-                            VillaId = 2
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "BBQ Area",
-                            VillaId = 2
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Sauna",
-                            VillaId = 2
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Name = "Hiking Trails",
-                            VillaId = 3
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Name = "Fireplace",
-                            VillaId = 3
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Name = "Game Room",
-                            VillaId = 3
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Name = "Hot Tub",
-                            VillaId = 3
-                        });
                 });
 
             modelBuilder.Entity("eVillaBooking.Domain.Entities.Villa", b =>

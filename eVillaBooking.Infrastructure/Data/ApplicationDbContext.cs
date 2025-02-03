@@ -13,6 +13,8 @@ namespace eVillaBooking.Infrastructure.Data
         public DbSet<Villa> Villas { get; set; }
         public DbSet<VillaNumber> VillaNumbers { get; set; }
 
+        public DbSet<Amenity> Amenities { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var seedData = new List<Villa>()
@@ -66,7 +68,22 @@ namespace eVillaBooking.Infrastructure.Data
                     Villa_Number = 301,
                 });
 
-                 
+            modelBuilder.Entity<Amenity>().HasData(
+                new Amenity { Id = 1, Name = "Swimming Pool", VillaId = 1 },
+                new Amenity { Id = 2, Name = "Gym", VillaId = 1 },
+                new Amenity { Id = 3, Name = "Spa", VillaId = 1 },
+                new Amenity { Id = 4, Name = "Wi-Fi", VillaId = 1 },
+
+                new Amenity { Id = 5, Name = "Private Beach", VillaId = 2 },
+                new Amenity { Id = 6, Name = "Yoga Room", VillaId = 2 },
+                new Amenity { Id = 7, Name = "BBQ Area", VillaId = 2 },
+                new Amenity { Id = 8, Name = "Sauna", VillaId = 2 },
+
+                new Amenity { Id = 9, Name = "Hiking Trails", VillaId = 3 },
+                new Amenity { Id = 10, Name = "Fireplace", VillaId = 3 },
+                new Amenity { Id = 11, Name = "Game Room", VillaId = 3 },
+                new Amenity { Id = 12, Name = "Hot Tub", VillaId = 3 }
+);
 
 
             //base.OnModelCreating(modelBuilder);
