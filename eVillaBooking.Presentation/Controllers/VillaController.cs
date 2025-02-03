@@ -1,6 +1,5 @@
 ﻿using eVillaBooking.Application.Common.Interfaces;
 using eVillaBooking.Domain.Entities;
-using eVillaBooking.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eVillaBooking.Presentation.Controllers
@@ -29,24 +28,24 @@ namespace eVillaBooking.Presentation.Controllers
         [HttpPost]
         public IActionResult Create(Villa villa)
         {
-            if(villa.Name == villa.Description)
+            if (villa.Name == villa.Description)
             {
                 ModelState.AddModelError("Name", "Name and Description are same");
             }
 
             if (ModelState.IsValid)
             {
-                if(villa.Image != null)
+                if (villa.Image != null)
                 {
                     string webRootPath = _webHostEnvironment.WebRootPath;
                     string imagePath = Path.Combine(webRootPath, @"Images\VillaImages");
-                    string myFileName = villa.Image.FileName.Split('.')[0] +"_"+ Guid.NewGuid().ToString().Substring(0,5) + Path.GetExtension(villa.Image.FileName);
+                    string myFileName = "MyImage" + "_" + Guid.NewGuid().ToString().Substring(0, 5) + Path.GetExtension(villa.Image.FileName);
 
                     string finalPath = Path.Combine(imagePath, myFileName);
-                    using (FileStream filestream = new FileStream(finalPath,FileMode.Create))
+                    using (FileStream filestream = new FileStream(finalPath, FileMode.Create))
                     {
                         villa.Image.CopyTo(filestream);
-                        villa.ImageUrl = @"\Images\VillaImages\" + myFileName;
+                        villa.ImageUrl = Path.Combine(@"\Images\VillaImages\" + myFileName);
                     }
                 }
                 else
@@ -70,7 +69,7 @@ namespace eVillaBooking.Presentation.Controllers
 
             if (villa == null)
             {
-                return RedirectToAction("Error","Home");
+                return RedirectToAction("Error", "Home");
             }
             return View(villa);
         }
@@ -78,20 +77,45 @@ namespace eVillaBooking.Presentation.Controllers
         [HttpPost]
         public IActionResult Edit(Villa villa)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                _unitOfWork.VillaRepositoryUOW.Update(villa);
-                _unitOfWork.Save();
+                if (villa.Image != null)
+                {
+                    string webRootPath = _webHostEnvironment.WebRootPath;
+                    string imagePath = Path.Combine(webRootPath, @"Images\VillaImages");
+                    string newFileName = "MyImage" + "_" + Guid.NewGuid().ToString().Substring(0, 5) + Path.GetExtension(villa.Image.FileName);
 
-                TempData["SuccessMessage"] = "Villa has been updated successfully";
-                return RedirectToAction(nameof(Index));
+                    string finalPath = Path.Combine(imagePath, newFileName);
+
+                    if (!string.IsNullOrEmpty(villa.ImageUrl))
+                    {
+                        string oldImagePath = Path.Combine(webRootPath, villa.ImageUrl.TrimStart('\\'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+
+                    using (FileStream filestream = new FileStream(finalPath, FileMode.Create))
+                    {
+                        villa.Image.CopyTo(filestream);
+                        villa.ImageUrl = Path.Combine(@"\Images\VillaImages\" + newFileName);
+                    }
+                }
+
+                    _unitOfWork.VillaRepositoryUOW.Update(villa);
+                    _unitOfWork.Save();
+
+                    TempData["SuccessMessage"] = "Villa has been updated successfully";
+                    return RedirectToAction(nameof(Index));
+                
             }
             return View(villa);
         }
 
         public IActionResult Delete(int id)
         {
-            var villa = _unitOfWork.VillaRepositoryUOW.Get(v => v.Id==id);
+            var villa = _unitOfWork.VillaRepositoryUOW.Get(v => v.Id == id);
 
             if (villa is null)
             {
@@ -104,6 +128,15 @@ namespace eVillaBooking.Presentation.Controllers
         public IActionResult DeleteConfirm(int id)
         {
             var villa = _unitOfWork.VillaRepositoryUOW.Get(v => v.Id == id);
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            if (!string.IsNullOrEmpty(villa.ImageUrl))
+            {
+                string oldImagePath = (webRootPath + villa.ImageUrl);
+                if(System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+            }
             _unitOfWork.VillaRepositoryUOW.Remove(villa);
             _unitOfWork.Save();
 
