@@ -27,15 +27,13 @@ namespace eVillaBooking.Presentation.Controllers
                 Text = v.Name,
                 Value = v.Id.ToString()
             });
-            ViewData["SelectListItem"] = selectListItems;
+            ViewBag.SelectListItem = selectListItems;
             return View();
         }
 
         [HttpPost]
         public IActionResult Create(Amenity amenity)
         {
-
-           // bool isVillaNumberExist = _unitOfWork.VillaNumberRepositoryUOW.GetAll(vn => vn.Villa_Number == villaNumber.Villa_Number).Any();
 
             if (ModelState.IsValid)
             {
@@ -53,17 +51,39 @@ namespace eVillaBooking.Presentation.Controllers
             }).ToList();
 
             ViewBag.SelectListItem = selectListItem;
-            TempData["ErrorMessage"] = "Villa number already exists";
+            TempData["ErrorMessage"] = "Villa number could not be created";
             return View(amenity);
         }
 
         public IActionResult Edit(int id)
         {
-            var amenity = _unitOfWork.AmenityRepositoryUOW.GetAll(am => am.Id == id).FirstOrDefault();
+            var amenity = _unitOfWork.AmenityRepositoryUOW.Get(am => am.Id == id);
 
             if (amenity is null)
             {
                 return RedirectToAction("Error", "Home");
+            }
+
+            var selectListItem = _unitOfWork.VillaRepositoryUOW.GetAll().Select(v => new SelectListItem
+            {
+                Text = v.Name,
+                Value = v.Id.ToString()
+            }).ToList();
+
+            ViewBag.SelectListItem = selectListItem;
+            return View(amenity);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Amenity amenity)
+        {
+            if (ModelState.IsValid)
+            {
+                _unitOfWork.AmenityRepositoryUOW.Update(amenity);
+                _unitOfWork.Save();
+
+                TempData["SuccessMessage"] = "Amenity has been updated successfully";
+                return RedirectToAction(nameof(Index));
             }
 
             var selectListItem = _unitOfWork.AmenityRepositoryUOW.GetAll().Select(v => new SelectListItem
@@ -72,23 +92,9 @@ namespace eVillaBooking.Presentation.Controllers
                 Value = v.Id.ToString()
             }).ToList();
 
-            ViewData["SelectListItem"] = selectListItem;
+            ViewBag.SelectListItem = selectListItem;
             return View(amenity);
-        }
 
-       
-        [HttpPost]
-        public IActionResult Edit(Amenity amenity)
-        {
-            if (ModelState.IsValid)
-            {
-               _unitOfWork.AmenityRepositoryUOW.Update(amenity);
-                _unitOfWork.Save();
-
-                TempData["SuccessMessage"] = "Amenity has been updated successfully";
-                return RedirectToAction(nameof(Index));
-            }
-            return View(amenity);
         }
 
 
@@ -108,11 +114,11 @@ namespace eVillaBooking.Presentation.Controllers
             }).ToList();
 
             ViewData["SelectListItem"] = selectListItem;
-
             return View(amenity);
         }
 
         [HttpPost]
+        [ActionName("Delete")]
         public IActionResult DeleteConfirm(int id)
         {
             var amenity = _unitOfWork.AmenityRepositoryUOW.Get(am => am.Id == id);
