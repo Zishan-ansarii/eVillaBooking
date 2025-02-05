@@ -23,4 +23,11 @@
     <Folder Include="wwwroot\Images\VillaImages\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\Shared\_VillaDetails.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
