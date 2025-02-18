@@ -1,0 +1,30 @@
+﻿
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    var role = string.Empty;
+    if (SignInManager.IsSignedIn(User))
+    {
+        var user = await UserManager.GetUserAsync(User);
+        role = (await UserManager.GetRolesAsync(user)).FirstOrDefault();
+    }
+}
+<ul class="navbar nav">
+    @if(SignInManager.IsSignedIn(User)){
+        <li class="nav-item">
+            <a class="nav-link fw-bolder">@UserManager.GetUserName(User) (@role)</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link btn btn-danger fw-bolder" asp-controller="Account" asp-action="Logout">Logout</a>
+        </li>
+    }
+    else{
+        <li class="nav-item">
+            <a class="nav-link btn btn-success fw-bolder" asp-controller="Account" asp-action="Register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link btn btn-success fw-bolder" asp-controller="Account" asp-action="Login">Login</a>
+        </li>
+    }
+</ul>
