@@ -1,5 +1,7 @@
 using System.Diagnostics;
+using AspNetCoreGeneratedDocument;
 using eVillaBooking.Application.Common.Interfaces;
+using eVillaBooking.Domain.Entities;
 using eVillaBooking.Presentation.Models;
 using eVillaBooking.Presentation.ViewModel;
 using Microsoft.AspNetCore.Mvc;
@@ -26,12 +28,33 @@ namespace eVillaBooking.Presentation.Controllers
             return View(homeVM);
         }
 
+        [HttpPost]
+        public IActionResult GetVillaByDate(int nights, DateOnly checkInDate)
+        {
+            var villaList = _unitOfWork.VillaRepositoryUOW.GetAll(includeProperties: "AmenityList");
+
+            foreach (var villa in villaList)
+            {
+                if (villa.Id % 2 == 0)
+                {
+                    villa.IsAvailable = false;
+                }
+            }
+
+            var homeVM = new HomeVM()
+            {
+                VillaList = villaList,
+                Nights = nights,
+                CheckInDate = checkInDate,
+            };
+            return PartialView("_VillaList",homeVM);
+        }
+
         public IActionResult Privacy()
         {
             return View();
         }
 
-       
         public IActionResult Error()
         {
             return View();
