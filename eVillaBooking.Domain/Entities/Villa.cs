@@ -24,5 +24,8 @@ namespace eVillaBooking.Domain.Entities
 
         [ValidateNever]
         public ICollection<Amenity> AmenityList { get; set; }
+
+        [NotMapped]
+        public bool IsAvailable { get; set; } = true;
     }
 }

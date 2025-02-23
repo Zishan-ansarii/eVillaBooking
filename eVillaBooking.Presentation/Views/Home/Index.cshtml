@@ -30,15 +30,18 @@
             <div class="col-12 col-md-5  offset-md-1 pl-2  pr-2 pr-md-0">
                 <div class="form-group">
                     <label>Check In Date</label>
-                    <input asp-for="CheckInDate" type="date" class="form-control" />
+                    <input type="date" asp-for="CheckInDate" class="form-control"
+                           min="@DateTime.Now.ToString("yyyy-MM-dd")"
+                           max="@DateTime.Now.AddYears(1).ToString("yyyy-MM-dd")" />
+
                 </div>
             </div>
 
             <div class="col-8 col-md-3 pl-2 pr-2">
                 <div class="form-group">
                     <label>No. of nights</label>
-                    <select class="form-select">
-                        @for(int i=1; i<=10; i++)
+                    <select asp-for="Nights" class="form-select">
+                        @for (int i = 1; i < 11; i++)
                         {
                             <option value="@i">@i</option>
                         }
@@ -48,7 +51,7 @@
 
             <div class="col-4 col-md-2 pt-4 pr-2">
                 <div class="form-group">
-                    <button type="button" class="btn btn-success btn-block">
+                    <button type="button" onclick="fnLoadVillaList()" class="btn btn-success btn-block">
                         <i class="bi bi-search"></i>  &nbsp; Check Availability
                     </button>
 
@@ -57,61 +60,41 @@
 
         </div>
 
-
-
-
-        <div id="VillasList">
-            <div class="container">
-                <div class="row px-lg-4 m-lg-3 m-sm-0 px-sm-0">
-                    <!-- Row moved outside loop -->
-                    @foreach (var villa in Model.VillaList)
-                    {
-                        <div class=" col-md-12 col-lg-6 p-4">
-                            <!-- Ensure 2 columns in a row -->
-                            <div class="row" style="border-radius:5px; border: 1px solid #aaa">
-                                <div class="col-4 p-2">
-                                    <img class="d-block w-100" style="border-radius:5px;" src="@villa.ImageUrl">
-                                </div>
-                                <div class="col-8">
-                                    <div class="d-flex justify-content-between">
-                                        <p class="card-title text-warning" style="font-size:x-large">@villa.Name</p>
-                                        <div class="pt-2">
-                                            <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target='#exampleModal-@villa.Id'>
-                                                Details
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <p class="card-text">
-                                        @Html.Raw(villa.Description)
-                                    </p>
-                                </div>
-                                <div class="col-12">
-                                    <div class="row pb-2 pt-1">
-                                        <div class="col-4">
-                                            <a class="btn btn-success form-control btn-block">Book</a>
-                                        </div>
-                                        <div class="col-4">
-                                            <span> Occupancy: @villa.Occupancy adults</span><br />
-                                            <span class="pt-1">Villa Size: @villa.Sqft sqft</span><br />
-                                        </div>
-                                        <div class="col-4">
-                                            <span class="text-warning float-end font-weight-bold pt-1" style="font-size:22px;">
-                                                 <span style="border-bottom:1px solid #ff6a00">@villa.Price.ToString("c")</span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Modal (Outside Column to Avoid Nesting Issues) -->
-                       <partial name="_VillaDetails" model="villa"/>
-
-                    } <!-- End foreach -->
-                </div> <!-- End Row -->
-            </div> <!-- End Container -->
-        </div>
-
+        <partial name="_VillaList" model="@Model" />
 
     </form>
 </div>
+
+@section Scripts {
+    <script>
+        function fnLoadVillaList(){
+            var objData = {
+                nights : $('#Nights').val(),
+                checkInDate : $('#CheckInDate').val()
+            }
+
+            $.ajax({
+                url : "@Url.Action("GetVillaByDate","Home")",
+                type : "POST",
+                data : objData,
+                
+                success : function(partialView){
+
+                    $('#VillasList').html(partialView)
+                },
+
+                failure : function(response){
+                    alert(response.responseText);
+                },
+
+                error : function(response){
+                    alert(response.responseText);
+                }
+
+            });
+        }
+    </script>
+}
+
+
+
