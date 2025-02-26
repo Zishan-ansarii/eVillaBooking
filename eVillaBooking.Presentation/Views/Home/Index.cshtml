@@ -68,6 +68,8 @@
 @section Scripts {
     <script>
         function fnLoadVillaList(){
+            $('.custom-sppiner').show();
+
             var objData = {
                 nights : $('#Nights').val(),
                 checkInDate : $('#CheckInDate').val()
@@ -79,8 +81,9 @@
                 data : objData,
                 
                 success : function(partialView){
-
+                    //$('.custom-sppiner').show();
                     $('#VillasList').html(partialView)
+                    $('.custom-sppiner').hide();
                 },
 
                 failure : function(response){

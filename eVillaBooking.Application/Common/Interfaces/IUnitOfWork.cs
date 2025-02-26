@@ -13,7 +13,6 @@ namespace eVillaBooking.Application.Common.Interfaces
         public IAmenityRepository AmenityRepositoryUOW { get; }
         public IBookingRepository BookingRepositoryUOW { get; }
 
-
         void Save();
 
     }
