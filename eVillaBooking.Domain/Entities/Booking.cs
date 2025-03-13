@@ -34,6 +34,7 @@ namespace eVillaBooking.Domain.Entities
         public string? Phone { get; set; }
 
         // total cost of the booking
+        [Required]
         public double  TotalCost { get; set; }
 
         // Number of nights the villa is booked for

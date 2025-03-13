@@ -17,6 +17,7 @@ namespace eVillaBooking.Infrastructure.Repository
         public IAmenityRepository AmenityRepositoryUOW { get; private set; }
 
         public IBookingRepository BookingRepositoryUOW { get; private set; }
+        public IApplicationUserRepository ApplicationUserRepositoryUOW { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -25,6 +26,7 @@ namespace eVillaBooking.Infrastructure.Repository
             this.VillaNumberRepositoryUOW = new VillaNumberRepository(_db);
             this.AmenityRepositoryUOW = new AmenityRepository(_db);
             this.BookingRepositoryUOW = new BookingRepository(_db);
+            this.ApplicationUserRepositoryUOW = new ApplicationUserRepository(_db);
         }
         public void Save()
         {
