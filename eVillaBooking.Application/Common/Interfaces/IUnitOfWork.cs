@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace eVillaBooking.Application.Common.Interfaces
+﻿namespace eVillaBooking.Application.Common.Interfaces
 {
     public interface IUnitOfWork
     {
@@ -12,6 +6,7 @@ namespace eVillaBooking.Application.Common.Interfaces
         public IVillaNumberRepository VillaNumberRepositoryUOW { get; }
         public IAmenityRepository AmenityRepositoryUOW { get; }
         public IBookingRepository BookingRepositoryUOW { get; }
+        public IApplicationUserRepository ApplicationUserRepositoryUOW { get; }
 
         void Save();
 
